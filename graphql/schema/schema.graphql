@@ -1,0 +1,8 @@
+type Tag {
+  id:ID!
+  name:String!
+}
+
+type Query {
+  allOwnedTags(userId:ID!):[Tag!]! #配列の強制, 空配列許容
+}
