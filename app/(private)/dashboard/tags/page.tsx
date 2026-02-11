@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ApolloTest } from "./ApolloTest";
+
 import { getTagsWithRanking } from "@/app/(private)/dashboard/tags/_server/server";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { TagsHeader } from "@/components/tag/display/tags-header";
@@ -67,6 +69,7 @@ export default async function TagsPage() {
         <div className="space-y-4">
           <TagsOverviewCard topTag={topTag} />
         </div>
+        <ApolloTest />
         <TagsList tags={tagList} />
       </section>
     </div>
