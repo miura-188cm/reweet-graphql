@@ -78,6 +78,7 @@ export const ApolloTest = ({ userId }: Props) => {
                       <ArrowUpRight className="size-4" />
                     </div>
                   </div>
+                  <p>{tag.count}</p>
                 </Link>
               );
             })}
