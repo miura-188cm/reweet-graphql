@@ -1,113 +1,4 @@
-import type { GraphQLResolveInfo } from "graphql";
-
-// ------------------------------------------------------------------
-// セクション1: 実際にアプリコードで使うもの
-// ------------------------------------------------------------------
-// resolver オブジェクト全体の型として使う:
-// const resolvers: Resolvers = { ... }
-// 例:
-// import type { Resolvers } from "@/graphql/__generated__/resolvers-types";
-// export const resolvers: Resolvers = {
-//   Query: {
-//     allOwnedTags: async (_parent, args, _context) => {
-//       return [{ id: "1", name: `tag-${args.userId}` }];
-//     },
-//   },
-// };
-export type Resolvers<ContextType = any> = {
-  Query?: QueryResolvers<ContextType>;
-  Tag?: TagResolvers<ContextType>;
-};
-
-// 型ごとに resolver を分割する場合に使う。
-// 例:
-// export const queryResolvers: QueryResolvers = {
-//   allOwnedTags: (_parent, args) => [{ id: "1", name: `tag-${args.userId}` }],
-// };
-export type QueryResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["Query"] = ResolversParentTypes["Query"],
-> = {
-  allOwnedTags?: Resolver<
-    Array<ResolversTypes["Tag"]>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryAllOwnedTagsArgs, "userId">
-  >;
-};
-
-// Tag のフィールド resolver を定義する場合に使う。
-// 例:
-// export const tagResolvers: TagResolvers = {
-//   id: (parent) => parent.id,
-//   name: (parent) => parent.name,
-// };
-export type TagResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["Tag"] = ResolversParentTypes["Tag"],
-> = {
-  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-};
-
-// ------------------------------------------------------------------
-// セクション2: 理解しておくとよいもの
-// ------------------------------------------------------------------
-/** All built-in and custom scalars, mapped to their actual values */
-// 使い方:
-// 引数/戻り値の input と output の違いを意識するときに参照する。
-export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-};
-
-// SDL から生成されたスキーマモデル型。
-// 使い方:
-// resolver の返却形を確認するときの参照先。
-export type Query = {
-  __typename?: "Query";
-  allOwnedTags: Array<Tag>;
-};
-
-export type QueryAllOwnedTagsArgs = {
-  userId: Scalars["ID"]["input"];
-};
-
-export type Tag = {
-  __typename?: "Tag";
-  id: Scalars["ID"]["output"];
-  name: Scalars["String"]["output"];
-};
-
-/** Mapping between all available schema types and the resolvers types */
-// 使い方:
-// 返却型や親型がどうラップされるかを確認するときに参照する。
-export type ResolversTypes = {
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
-  ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
-  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
-  String: ResolverTypeWrapper<Scalars["String"]["output"]>;
-  Tag: ResolverTypeWrapper<Tag>;
-};
-
-/** Mapping between all available schema types and the resolvers parents */
-// 使い方:
-// 各 resolver の parent が何型かを確認するときに参照する。
-export type ResolversParentTypes = {
-  Boolean: Scalars["Boolean"]["output"];
-  ID: Scalars["ID"]["output"];
-  Query: Record<PropertyKey, never>;
-  String: Scalars["String"]["output"];
-  Tag: Tag;
-};
-
-// ------------------------------------------------------------------
-// セクション3: 通常は気にしなくてよいもの（生成内部用）
-// ------------------------------------------------------------------
+import { GraphQLResolveInfo } from "graphql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -122,9 +13,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
 export type MakeEmpty<
   T extends { [key: string]: unknown },
   K extends keyof T,
-> = {
-  [_ in K]?: never;
-};
+> = { [_ in K]?: never };
 export type Incremental<T> =
   | T
   | {
@@ -133,12 +22,36 @@ export type Incremental<T> =
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+};
+
+export type Query = {
+  __typename?: "Query";
+  allOwnedTags: Array<Tag>;
+};
+
+export type QueryAllOwnedTagsArgs = {
+  userId: Scalars["ID"]["input"];
+};
+
+export type Tag = {
+  __typename?: "Tag";
+  count: Scalars["Int"]["output"];
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+};
+
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-
 export type Resolver<
   TResult,
   TParent = Record<PropertyKey, never>,
@@ -250,3 +163,50 @@ export type DirectiveResolverFn<
   context: TContext,
   info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
+
+/** Mapping between all available schema types and the resolvers types */
+export type ResolversTypes = {
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
+  ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
+  Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
+  Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
+  String: ResolverTypeWrapper<Scalars["String"]["output"]>;
+  Tag: ResolverTypeWrapper<Tag>;
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
+  Boolean: Scalars["Boolean"]["output"];
+  ID: Scalars["ID"]["output"];
+  Int: Scalars["Int"]["output"];
+  Query: Record<PropertyKey, never>;
+  String: Scalars["String"]["output"];
+  Tag: Tag;
+};
+
+export type QueryResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["Query"] = ResolversParentTypes["Query"],
+> = {
+  allOwnedTags?: Resolver<
+    Array<ResolversTypes["Tag"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryAllOwnedTagsArgs, "userId">
+  >;
+};
+
+export type TagResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Tag"] = ResolversParentTypes["Tag"],
+> = {
+  count?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+};
+
+export type Resolvers<ContextType = any> = {
+  Query?: QueryResolvers<ContextType>;
+  Tag?: TagResolvers<ContextType>;
+};

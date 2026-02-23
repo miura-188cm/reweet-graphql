@@ -14,8 +14,8 @@ services:
       timeout: 2s
       retries: 30
     volumes:
-      - dev-postgres-data:/var/lib/postgresql/data
+      - remeet-graphql-prac:/var/lib/postgresql/data
 
 volumes:
-  dev-postgres-data:
+  remeet-graphql-prac:
 # docker compose -f docker-compose.dev.yaml up -d db

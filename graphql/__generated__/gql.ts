@@ -2,13 +2,6 @@
 import * as types from "./graphql";
 import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 
-// ------------------------------------------------------------------
-// セクション1: 実際に使うもの
-// 使い方:
-// const doc = graphql(`query AllOwnedTags($userId: ID!) { allOwnedTags(userId: $userId) { id name } }`);
-// const { data } = useQuery(doc, { variables: { userId: "1" } });
-// ------------------------------------------------------------------
-
 /**
  * Map of all GraphQL operations in the project.
  *
@@ -21,10 +14,10 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-  "query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n  }\n}": typeof types.AllOwnedTagsDocument;
+  "query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n    count\n  }\n}": typeof types.AllOwnedTagsDocument;
 };
 const documents: Documents = {
-  "query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n  }\n}":
+  "query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n    count\n  }\n}":
     types.AllOwnedTagsDocument,
 };
 
@@ -46,23 +39,12 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n  }\n}",
-): (typeof documents)["query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n  }\n}"];
+  source: "query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n    count\n  }\n}",
+): (typeof documents)["query AllOwnedTags($userId: ID!) {\n  allOwnedTags(userId: $userId) {\n    id\n    name\n    count\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
 }
 
-// ------------------------------------------------------------------
-// セクション2: 見ておいた方がいいもの
-// 使い方:
-// DocumentType<typeof doc> の形で、doc から data 型を取り出せる。
-// ------------------------------------------------------------------
 export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
   TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;
-
-// ------------------------------------------------------------------
-// セクション3: 通常は使わないもの
-// 使い方:
-// documents マップや string overload の詳細は通常意識しなくてよい。
-// ------------------------------------------------------------------

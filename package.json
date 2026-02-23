@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"npm run docker:dev:up\"",
+    "dev:next":"next dev",
+    "dev:next:db": "concurrently \"next dev\" \"npm run docker:dev:up\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

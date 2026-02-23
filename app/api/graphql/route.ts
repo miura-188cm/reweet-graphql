@@ -19,6 +19,8 @@ const typeDefs = readFileSync(
   path.join(process.cwd(), "graphql/schema/schema.graphql"),
   "utf8",
 );
+
+//これ必要ないのでは？
 export const tagResolvers: TagResolvers = {
   id: (parent) => parent.id,
   name: (parent) => parent.name,
@@ -29,10 +31,19 @@ export const resolvers: Resolvers = {
     allOwnedTags: async (_parent, args, _context) => {
       const res = await prisma.tag.findMany({
         where: { userId: args.userId },
+        select: {
+          id: true,
+          name: true,
+          _count: {
+            select: {
+              contacts: true,
+            },
+          },
+        },
       });
 
       const ownedTags = res.map((t) => {
-        return { id: t.id, name: t.name };
+        return { id: t.id, name: t.name, count: t._count.contacts };
       });
       return ownedTags;
     },

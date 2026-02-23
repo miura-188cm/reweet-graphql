@@ -7,13 +7,6 @@ import {
 import { FragmentDefinitionNode } from "graphql";
 import { Incremental } from "./graphql";
 
-// ------------------------------------------------------------------
-// セクション1: 実際に使うもの（Fragment を使う場合のみ）
-// 使い方:
-// const user = useFragment(UserItemFragmentDoc, props.user);
-// makeFragmentData はテストで fragment 型データを作るときに使う。
-// ------------------------------------------------------------------
-
 export type FragmentType<
   TDocumentType extends DocumentTypeDecoration<any, any>,
 > =
@@ -92,12 +85,6 @@ export function makeFragmentData<
 >(data: FT, _fragment: F): FragmentType<F> {
   return data as FragmentType<F>;
 }
-
-// ------------------------------------------------------------------
-// セクション2: 見ておいた方がいいもの
-// 使い方:
-// isFragmentReady は @defer などの段階的配信時に fragment が揃ったか確認する。
-// ------------------------------------------------------------------
 export function isFragmentReady<TQuery, TFrag>(
   queryNode: DocumentTypeDecoration<TQuery, any>,
   fragmentNode: TypedDocumentNode<TFrag>,
@@ -122,9 +109,3 @@ export function isFragmentReady<TQuery, TFrag>(
   const fields = (fragName && deferredFields[fragName]) || [];
   return fields.length > 0 && fields.every((field) => data && field in data);
 }
-
-// ------------------------------------------------------------------
-// セクション3: 通常は使わないもの
-// 使い方:
-// overload 群や型体操の詳細は生成内部実装なので通常は意識しない。
-// ------------------------------------------------------------------
