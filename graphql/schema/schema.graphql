@@ -1,13 +1,74 @@
-type Tag {
-  id:ID!
-  name:String!
-  count:Int!
+interface Tag {
+  id: ID!
+  name: String!
 }
 
+type TagPage implements Tag {
+  id: ID!
+  name: String!
+  count: Int!
+}
+
+type ContactDto {
+  id: ID!
+  name: String!
+  company: String
+  role: String
+  description: String
+  links: [ContactLink!]
+  tags: [Tag!]
+  meetup: Meetup!
+}
+
+type ContactLink {
+  id: ID!
+  type: LinkType!
+  url: String!
+  handle: String
+}
+
+enum LinkType {
+  GITHUB
+  TWITTER
+  WEBSITE
+  PRODUCT
+  OTHER
+}
+
+type Meetup {
+  id: ID!
+  name: String!
+  scheduledAt: String!
+}
 type Query {
-  allOwnedTags(userId:ID!):[Tag!]! #配列の強制, 空配列許容
+  allOwnedTags(userId: ID!): [TagPage!]! #配列の強制, 空配列許容
+  allContacts(userId: ID!): [ContactDto!]
 }
 
 query AllOwnedTags($userId: ID!) {
-  allOwnedTags(userId: $userId) { id name count }
+  allOwnedTags(userId: $userId) {
+    id
+    name
+    count
+  }
+  allContacts(userId: $userId) {
+    id
+    name
+    company
+    role
+    description
+    links {
+      id
+      type
+      url
+    }
+    tags {
+      name
+    }
+    meetup {
+      id
+      name
+      scheduledAt
+    }
+  }
 }

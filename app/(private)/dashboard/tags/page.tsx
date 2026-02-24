@@ -6,7 +6,6 @@ import { getTagsWithRanking } from "@/app/(private)/dashboard/tags/_server/serve
 import { getUser } from "@/auth";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { TagsHeader } from "@/components/tag/display/tags-header";
-import { TagsList } from "@/components/tag/display/tags-list";
 import { TagsOverviewCard } from "@/components/tag/display/tags-overview-card";
 import { Button } from "@/components/ui/button";
 import {
@@ -72,7 +71,6 @@ export default async function TagsPage() {
           <TagsOverviewCard topTag={topTag} />
         </div>
         <ApolloTest userId={user.id} />
-        <TagsList tags={tagList} />
       </section>
     </div>
   );

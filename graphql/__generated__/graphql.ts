@@ -29,9 +29,49 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
+export type ContactDto = {
+  __typename?: "ContactDto";
+  company?: Maybe<Scalars["String"]["output"]>;
+  description?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["ID"]["output"];
+  links?: Maybe<Array<ContactLink>>;
+  meetup: Meetup;
+  name: Scalars["String"]["output"];
+  role?: Maybe<Scalars["String"]["output"]>;
+  tags?: Maybe<Array<Tag>>;
+};
+
+export type ContactLink = {
+  __typename?: "ContactLink";
+  handle?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["ID"]["output"];
+  type: LinkType;
+  url: Scalars["String"]["output"];
+};
+
+export enum LinkType {
+  Github = "GITHUB",
+  Other = "OTHER",
+  Product = "PRODUCT",
+  Twitter = "TWITTER",
+  Website = "WEBSITE",
+}
+
+export type Meetup = {
+  __typename?: "Meetup";
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+  scheduledAt: Scalars["String"]["output"];
+};
+
 export type Query = {
   __typename?: "Query";
-  allOwnedTags: Array<Tag>;
+  allContacts?: Maybe<Array<ContactDto>>;
+  allOwnedTags: Array<TagPage>;
+};
+
+export type QueryAllContactsArgs = {
+  userId: Scalars["ID"]["input"];
 };
 
 export type QueryAllOwnedTagsArgs = {
@@ -39,7 +79,12 @@ export type QueryAllOwnedTagsArgs = {
 };
 
 export type Tag = {
-  __typename?: "Tag";
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export type TagPage = Tag & {
+  __typename?: "TagPage";
   count: Scalars["Int"]["output"];
   id: Scalars["ID"]["output"];
   name: Scalars["String"]["output"];
@@ -52,11 +97,32 @@ export type AllOwnedTagsQueryVariables = Exact<{
 export type AllOwnedTagsQuery = {
   __typename?: "Query";
   allOwnedTags: Array<{
-    __typename?: "Tag";
+    __typename?: "TagPage";
     id: string;
     name: string;
     count: number;
   }>;
+  allContacts?: Array<{
+    __typename?: "ContactDto";
+    id: string;
+    name: string;
+    company?: string | null;
+    role?: string | null;
+    description?: string | null;
+    links?: Array<{
+      __typename?: "ContactLink";
+      id: string;
+      type: LinkType;
+      url: string;
+    }> | null;
+    tags?: Array<{ __typename?: "TagPage"; name: string }> | null;
+    meetup: {
+      __typename?: "Meetup";
+      id: string;
+      name: string;
+      scheduledAt: string;
+    };
+  }> | null;
 };
 
 export const AllOwnedTagsDocument = {
@@ -101,6 +167,67 @@ export const AllOwnedTagsDocument = {
                 { kind: "Field", name: { kind: "Name", value: "id" } },
                 { kind: "Field", name: { kind: "Name", value: "name" } },
                 { kind: "Field", name: { kind: "Name", value: "count" } },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "allContacts" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "userId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "userId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "company" } },
+                { kind: "Field", name: { kind: "Name", value: "role" } },
+                { kind: "Field", name: { kind: "Name", value: "description" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "links" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
+                      { kind: "Field", name: { kind: "Name", value: "url" } },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "tags" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "meetup" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "name" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "scheduledAt" },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
