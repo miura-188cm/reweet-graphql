@@ -64,6 +64,7 @@ query AllContacts($userId: ID!) {
       id
       type
       url
+      handle
     }
     tags {
       name

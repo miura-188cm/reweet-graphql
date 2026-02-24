@@ -122,6 +122,7 @@ export type AllContactsQuery = {
       id: string;
       type: LinkType;
       url: string;
+      handle?: string | null;
     }> | null;
     tags?: Array<{ __typename?: "TagPage"; name: string }> | null;
     meetup: {
@@ -236,6 +237,10 @@ export const AllContactsDocument = {
                       { kind: "Field", name: { kind: "Name", value: "id" } },
                       { kind: "Field", name: { kind: "Name", value: "type" } },
                       { kind: "Field", name: { kind: "Name", value: "url" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "handle" },
+                      },
                     ],
                   },
                 },
