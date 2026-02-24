@@ -51,6 +51,9 @@ query AllOwnedTags($userId: ID!) {
     name
     count
   }
+}
+
+query AllContacts($userId: ID!) {
   allContacts(userId: $userId) {
     id
     name

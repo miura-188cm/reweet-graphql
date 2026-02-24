@@ -102,6 +102,14 @@ export type AllOwnedTagsQuery = {
     name: string;
     count: number;
   }>;
+};
+
+export type AllContactsQueryVariables = Exact<{
+  userId: Scalars["ID"]["input"];
+}>;
+
+export type AllContactsQuery = {
+  __typename?: "Query";
   allContacts?: Array<{
     __typename?: "ContactDto";
     id: string;
@@ -170,6 +178,34 @@ export const AllOwnedTagsDocument = {
               ],
             },
           },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AllOwnedTagsQuery, AllOwnedTagsQueryVariables>;
+export const AllContactsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "AllContacts" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "userId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
           {
             kind: "Field",
             name: { kind: "Name", value: "allContacts" },
@@ -235,4 +271,4 @@ export const AllOwnedTagsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<AllOwnedTagsQuery, AllOwnedTagsQueryVariables>;
+} as unknown as DocumentNode<AllContactsQuery, AllContactsQueryVariables>;
