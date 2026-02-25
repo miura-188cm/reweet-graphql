@@ -4,10 +4,7 @@ import path from "node:path";
 import { ApolloServer } from "@apollo/server";
 import { NextResponse, type NextRequest } from "next/server";
 
-import type {
-  Resolvers,
-  TagResolvers,
-} from "@/graphql/__generated__/resolvers-types";
+import type { Resolvers } from "@/graphql/__generated__/resolvers-types";
 
 import { prisma } from "@/lib/prisma";
 // Apollo Server は Node.js ランタイムで動かす
@@ -19,12 +16,6 @@ const typeDefs = readFileSync(
   path.join(process.cwd(), "graphql/schema/schema.graphql"),
   "utf8",
 );
-
-//これ必要ないのでは？
-export const tagResolvers: TagResolvers = {
-  id: (parent) => parent.id,
-  name: (parent) => parent.name,
-};
 
 export const resolvers: Resolvers = {
   Query: {
@@ -46,6 +37,60 @@ export const resolvers: Resolvers = {
         return { id: t.id, name: t.name, count: t._count.contacts };
       });
       return ownedTags;
+    },
+    allContacts: async (_parent, args, _context) => {
+      const contacts = await prisma.contact.findMany({
+        where: { userId: args.userId },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          name: true,
+          company: true,
+          role: true,
+          links: {
+            select: {
+              id: true,
+              type: true,
+              url: true,
+              handle: true,
+            },
+          },
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          meetup: {
+            select: {
+              id: true,
+              name: true,
+              scheduledAt: true,
+            },
+          },
+        },
+      });
+      return contacts.map((c) => {
+        return {
+          id: c.id,
+          name: c.name,
+          company: c.company,
+          role: c.role,
+          links: c.links,
+          tags: c.tags.map((t) => t.tag),
+          meetup: {
+            id: c.meetup.id,
+            name: c.meetup.name,
+            scheduledAt: c.meetup.scheduledAt.toDateString(),
+          },
+        };
+      });
     },
   },
 };
