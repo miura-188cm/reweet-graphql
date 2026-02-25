@@ -70,6 +70,17 @@ export type Meetup = {
   scheduledAt: Scalars["String"]["output"];
 };
 
+export type Mutation = {
+  __typename?: "Mutation";
+  addMeetup: Meetup;
+};
+
+export type MutationAddMeetupArgs = {
+  scheduledAt?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  userId: Scalars["ID"]["input"];
+};
+
 export type Query = {
   __typename?: "Query";
   allContacts?: Maybe<Array<ContactDto>>;
@@ -137,6 +148,17 @@ export type AllContactsQuery = {
       scheduledAt: string;
     };
   }> | null;
+};
+
+export type AddMeetupMutationVariables = Exact<{
+  userId: Scalars["ID"]["input"];
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  scheduledAt?: InputMaybe<Scalars["String"]["input"]>;
+}>;
+
+export type AddMeetupMutation = {
+  __typename?: "Mutation";
+  addMeetup: { __typename?: "Meetup"; id: string };
 };
 
 export const AllOwnedTagsDocument = {
@@ -281,3 +303,83 @@ export const AllContactsDocument = {
     },
   ],
 } as unknown as DocumentNode<AllContactsQuery, AllContactsQueryVariables>;
+export const AddMeetupDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "AddMeetup" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "userId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "title" },
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "scheduledAt" },
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "addMeetup" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "userId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "userId" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "title" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "title" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "scheduledAt" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "scheduledAt" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "id" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AddMeetupMutation, AddMeetupMutationVariables>;

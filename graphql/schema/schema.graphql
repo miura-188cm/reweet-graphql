@@ -3,8 +3,8 @@ interface Tag {
   name: String!
 }
 type ContactTags implements Tag {
-  id:ID!
-  name:String!
+  id: ID!
+  name: String!
 }
 type TagPage implements Tag {
   id: ID!
@@ -48,6 +48,10 @@ type Query {
   allContacts(userId: ID!): [ContactDto!]
 }
 
+type Mutation {
+  addMeetup(userId: ID!, title: String, scheduledAt: String): Meetup!
+}
+
 query AllOwnedTags($userId: ID!) {
   allOwnedTags(userId: $userId) {
     id
@@ -76,5 +80,11 @@ query AllContacts($userId: ID!) {
       name
       scheduledAt
     }
+  }
+}
+
+mutation AddMeetup($userId: ID!, $title: String, $scheduledAt: String) {
+  addMeetup(userId: $userId, title: $title, scheduledAt: $scheduledAt) {
+    id
   }
 }

@@ -70,6 +70,17 @@ export type Meetup = {
   scheduledAt: Scalars["String"]["output"];
 };
 
+export type Mutation = {
+  __typename?: "Mutation";
+  addMeetup: Meetup;
+};
+
+export type MutationAddMeetupArgs = {
+  scheduledAt?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  userId: Scalars["ID"]["input"];
+};
+
 export type Query = {
   __typename?: "Query";
   allContacts?: Maybe<Array<ContactDto>>;
@@ -229,6 +240,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
   LinkType: LinkType;
   Meetup: ResolverTypeWrapper<Meetup>;
+  Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   Tag: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Tag"]>;
@@ -244,6 +256,7 @@ export type ResolversParentTypes = {
   ID: Scalars["ID"]["output"];
   Int: Scalars["Int"]["output"];
   Meetup: Meetup;
+  Mutation: Record<PropertyKey, never>;
   Query: Record<PropertyKey, never>;
   String: Scalars["String"]["output"];
   Tag: ResolversInterfaceTypes<ResolversParentTypes>["Tag"];
@@ -313,6 +326,19 @@ export type MeetupResolvers<
   scheduledAt?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
+export type MutationResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
+> = {
+  addMeetup?: Resolver<
+    ResolversTypes["Meetup"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddMeetupArgs, "userId">
+  >;
+};
+
 export type QueryResolvers<
   ContextType = any,
   ParentType extends
@@ -360,6 +386,7 @@ export type Resolvers<ContextType = any> = {
   ContactTags?: ContactTagsResolvers<ContextType>;
   LinkType?: LinkTypeResolvers;
   Meetup?: MeetupResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
   TagPage?: TagPageResolvers<ContextType>;
