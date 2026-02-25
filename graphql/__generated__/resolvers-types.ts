@@ -1,3 +1,4 @@
+import { LinkType } from "@prisma/client";
 import { GraphQLResolveInfo } from "graphql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -19,7 +20,9 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
     };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type EnumResolverSignature<T, AllowedValues = any> = {
+  [key in keyof T]?: AllowedValues;
+};
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -41,7 +44,7 @@ export type ContactDto = {
   meetup: Meetup;
   name: Scalars["String"]["output"];
   role?: Maybe<Scalars["String"]["output"]>;
-  tags?: Maybe<Array<Tag>>;
+  tags?: Maybe<Array<ContactTags>>;
 };
 
 export type ContactLink = {
@@ -52,13 +55,13 @@ export type ContactLink = {
   url: Scalars["String"]["output"];
 };
 
-export enum LinkType {
-  Github = "GITHUB",
-  Other = "OTHER",
-  Product = "PRODUCT",
-  Twitter = "TWITTER",
-  Website = "WEBSITE",
-}
+export type ContactTags = Tag & {
+  __typename?: "ContactTags";
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+};
+
+export { LinkType };
 
 export type Meetup = {
   __typename?: "Meetup";
@@ -213,16 +216,15 @@ export type DirectiveResolverFn<
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Tag: TagPage;
+    Tag: ContactTags | TagPage;
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
-  ContactDto: ResolverTypeWrapper<
-    Omit<ContactDto, "tags"> & { tags?: Maybe<Array<ResolversTypes["Tag"]>> }
-  >;
+  ContactDto: ResolverTypeWrapper<ContactDto>;
   ContactLink: ResolverTypeWrapper<ContactLink>;
+  ContactTags: ResolverTypeWrapper<ContactTags>;
   ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
   Int: ResolverTypeWrapper<Scalars["Int"]["output"]>;
   LinkType: LinkType;
@@ -236,10 +238,9 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars["Boolean"]["output"];
-  ContactDto: Omit<ContactDto, "tags"> & {
-    tags?: Maybe<Array<ResolversParentTypes["Tag"]>>;
-  };
+  ContactDto: ContactDto;
   ContactLink: ContactLink;
+  ContactTags: ContactTags;
   ID: Scalars["ID"]["output"];
   Int: Scalars["Int"]["output"];
   Meetup: Meetup;
@@ -269,7 +270,11 @@ export type ContactDtoResolvers<
   meetup?: Resolver<ResolversTypes["Meetup"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  tags?: Resolver<Maybe<Array<ResolversTypes["Tag"]>>, ParentType, ContextType>;
+  tags?: Resolver<
+    Maybe<Array<ResolversTypes["ContactTags"]>>,
+    ParentType,
+    ContextType
+  >;
 };
 
 export type ContactLinkResolvers<
@@ -282,6 +287,21 @@ export type ContactLinkResolvers<
   type?: Resolver<ResolversTypes["LinkType"], ParentType, ContextType>;
   url?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
+
+export type ContactTagsResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["ContactTags"] = ResolversParentTypes["ContactTags"],
+> = {
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LinkTypeResolvers = EnumResolverSignature<
+  { GITHUB?: any; OTHER?: any; PRODUCT?: any; TWITTER?: any; WEBSITE?: any },
+  ResolversTypes["LinkType"]
+>;
 
 export type MeetupResolvers<
   ContextType = any,
@@ -316,7 +336,11 @@ export type TagResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Tag"] = ResolversParentTypes["Tag"],
 > = {
-  __resolveType: TypeResolveFn<"TagPage", ParentType, ContextType>;
+  __resolveType: TypeResolveFn<
+    "ContactTags" | "TagPage",
+    ParentType,
+    ContextType
+  >;
 };
 
 export type TagPageResolvers<
@@ -333,6 +357,8 @@ export type TagPageResolvers<
 export type Resolvers<ContextType = any> = {
   ContactDto?: ContactDtoResolvers<ContextType>;
   ContactLink?: ContactLinkResolvers<ContextType>;
+  ContactTags?: ContactTagsResolvers<ContextType>;
+  LinkType?: LinkTypeResolvers;
   Meetup?: MeetupResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;

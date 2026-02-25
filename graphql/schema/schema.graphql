@@ -2,7 +2,10 @@ interface Tag {
   id: ID!
   name: String!
 }
-
+type ContactTags implements Tag {
+  id:ID!
+  name:String!
+}
 type TagPage implements Tag {
   id: ID!
   name: String!
@@ -16,7 +19,7 @@ type ContactDto {
   role: String
   description: String
   links: [ContactLink!]
-  tags: [Tag!]
+  tags: [ContactTags!]
   meetup: Meetup!
 }
 
@@ -59,7 +62,6 @@ query AllContacts($userId: ID!) {
     name
     company
     role
-    description
     links {
       id
       type

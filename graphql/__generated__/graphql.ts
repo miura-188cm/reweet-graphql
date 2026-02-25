@@ -38,7 +38,7 @@ export type ContactDto = {
   meetup: Meetup;
   name: Scalars["String"]["output"];
   role?: Maybe<Scalars["String"]["output"]>;
-  tags?: Maybe<Array<Tag>>;
+  tags?: Maybe<Array<ContactTags>>;
 };
 
 export type ContactLink = {
@@ -47,6 +47,12 @@ export type ContactLink = {
   id: Scalars["ID"]["output"];
   type: LinkType;
   url: Scalars["String"]["output"];
+};
+
+export type ContactTags = Tag & {
+  __typename?: "ContactTags";
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
 };
 
 export enum LinkType {
@@ -116,7 +122,6 @@ export type AllContactsQuery = {
     name: string;
     company?: string | null;
     role?: string | null;
-    description?: string | null;
     links?: Array<{
       __typename?: "ContactLink";
       id: string;
@@ -124,7 +129,7 @@ export type AllContactsQuery = {
       url: string;
       handle?: string | null;
     }> | null;
-    tags?: Array<{ __typename?: "TagPage"; name: string }> | null;
+    tags?: Array<{ __typename?: "ContactTags"; name: string }> | null;
     meetup: {
       __typename?: "Meetup";
       id: string;
@@ -227,7 +232,6 @@ export const AllContactsDocument = {
                 { kind: "Field", name: { kind: "Name", value: "name" } },
                 { kind: "Field", name: { kind: "Name", value: "company" } },
                 { kind: "Field", name: { kind: "Name", value: "role" } },
-                { kind: "Field", name: { kind: "Name", value: "description" } },
                 {
                   kind: "Field",
                   name: { kind: "Name", value: "links" },

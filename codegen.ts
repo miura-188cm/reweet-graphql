@@ -14,6 +14,11 @@ const config: CodegenConfig = {
     // resolver型（サーバー用）
     "./graphql/__generated__/resolvers-types.ts": {
       plugins: ["typescript", "typescript-resolvers"],
+      config: {
+        enumValues: {
+          LinkType: "@prisma/client#LinkType",
+        },
+      },
     },
   },
 };
