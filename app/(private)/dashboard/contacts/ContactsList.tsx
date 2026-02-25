@@ -29,7 +29,10 @@ export default function ApolloContactsList({ userId }: { userId: string }) {
     <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
       <h1>Apollo!!!!</h1>
       {data.allContacts.map((contact) => (
-        <Card className="flex h-full flex-col border-muted transition hover:-translate-y-0.5 hover:border-orange-200">
+        <Card
+          className="flex h-full flex-col border-muted transition hover:-translate-y-0.5 hover:border-orange-200"
+          key={contact.id}
+        >
           <CardHeader className="space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
