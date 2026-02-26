@@ -8,21 +8,25 @@ import { deleteMeetupService } from "./deleteMeetupService";
 import { updateMeetupService } from "./updateMeetupService";
 
 import type { ErrorCode } from "@/type/error/error";
-import type { ActionState } from "@/type/util/action";
 
 import { getUser } from "@/auth";
 import { routes } from "@/util/routes";
 import { createMeetupSchema } from "@/validations/private/meetupValidation";
 
-export const createMeetup = async (
-  _: ActionState<ErrorCode> | null,
-  formData: FormData,
-): Promise<ActionState<ErrorCode>> => {
-  const rawFormData = {
-    name: formData.get("name")?.toString() ?? "",
-    scheduledAt: formData.get("scheduledAt")?.toString() ?? "",
-  };
+type ActionState<T> =
+  | {
+      success: true;
+      meetupId: string;
+    }
+  | {
+      success: false;
+      error: T;
+    };
 
+export const createMeetup = async (rawFormData: {
+  name: string;
+  scheduledAt: string;
+}): Promise<ActionState<ErrorCode | { meetupId: string }>> => {
   const validatedFields = createMeetupSchema.safeParse(rawFormData);
   if (!validatedFields.success)
     return {
@@ -43,7 +47,10 @@ export const createMeetup = async (
       error: createdMeetupResult.error.code,
     };
 
-  redirect(routes.dashboardMeetupDetail(createdMeetupResult.data.meetupId));
+  return {
+    success: true,
+    meetupId: createdMeetupResult.data.meetupId,
+  };
 };
 
 export const updateMeetup = async (
