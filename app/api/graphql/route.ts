@@ -4,8 +4,12 @@ import path from "node:path";
 import { ApolloServer } from "@apollo/server";
 import { NextResponse, type NextRequest } from "next/server";
 
-import type { Resolvers } from "@/graphql/__generated__/resolvers-types";
+import type {
+  MutationAddMeetupArgs,
+  Resolvers,
+} from "@/graphql/__generated__/resolvers-types";
 
+import { createMeetup } from "@/app/(private)/dashboard/meetup/action";
 import { prisma } from "@/lib/prisma";
 // Apollo Server は Node.js ランタイムで動かす
 export const runtime = "nodejs";
@@ -91,6 +95,28 @@ export const resolvers: Resolvers = {
           },
         };
       });
+    },
+  },
+  Mutation: {
+    addMeetup: async (_: unknown, args: MutationAddMeetupArgs) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      const res = await createMeetup({
+        name: args.name,
+        scheduledAt: args.scheduledAt,
+      });
+
+      if (!res.success) {
+        return {
+          id: "error",
+          name: "error",
+          scheduledAt: "error",
+        };
+      }
+      return {
+        id: res.meetupId,
+        name: "",
+        scheduledAt: "",
+      };
     },
   },
 };
