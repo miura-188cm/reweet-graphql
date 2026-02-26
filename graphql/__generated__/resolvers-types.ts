@@ -76,8 +76,8 @@ export type Mutation = {
 };
 
 export type MutationAddMeetupArgs = {
-  scheduledAt?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  scheduledAt: Scalars["String"]["input"];
   userId: Scalars["ID"]["input"];
 };
 
@@ -335,7 +335,7 @@ export type MutationResolvers<
     ResolversTypes["Meetup"],
     ParentType,
     ContextType,
-    RequireFields<MutationAddMeetupArgs, "userId">
+    RequireFields<MutationAddMeetupArgs, "name" | "scheduledAt" | "userId">
   >;
 };
 

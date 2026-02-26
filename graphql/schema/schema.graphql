@@ -49,7 +49,7 @@ type Query {
 }
 
 type Mutation {
-  addMeetup(userId: ID!, title: String, scheduledAt: String): Meetup!
+  addMeetup(userId: ID!, name: String!, scheduledAt: String!): Meetup!
 }
 
 query AllOwnedTags($userId: ID!) {
@@ -83,8 +83,8 @@ query AllContacts($userId: ID!) {
   }
 }
 
-mutation AddMeetup($userId: ID!, $title: String, $scheduledAt: String) {
-  addMeetup(userId: $userId, title: $title, scheduledAt: $scheduledAt) {
+mutation AddMeetup($userId: ID!, $name: String!, $scheduledAt: String!) {
+  addMeetup(userId: $userId, name: $name, scheduledAt: $scheduledAt) {
     id
   }
 }

@@ -76,8 +76,8 @@ export type Mutation = {
 };
 
 export type MutationAddMeetupArgs = {
-  scheduledAt?: InputMaybe<Scalars["String"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  scheduledAt: Scalars["String"]["input"];
   userId: Scalars["ID"]["input"];
 };
 
@@ -152,8 +152,8 @@ export type AllContactsQuery = {
 
 export type AddMeetupMutationVariables = Exact<{
   userId: Scalars["ID"]["input"];
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  scheduledAt?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
+  scheduledAt: Scalars["String"]["input"];
 }>;
 
 export type AddMeetupMutation = {
@@ -324,11 +324,14 @@ export const AddMeetupDocument = {
         },
         {
           kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "title" },
+          variable: { kind: "Variable", name: { kind: "Name", value: "name" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
           },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
         },
         {
           kind: "VariableDefinition",
@@ -336,7 +339,13 @@ export const AddMeetupDocument = {
             kind: "Variable",
             name: { kind: "Name", value: "scheduledAt" },
           },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
         },
       ],
       selectionSet: {
@@ -356,10 +365,10 @@ export const AddMeetupDocument = {
               },
               {
                 kind: "Argument",
-                name: { kind: "Name", value: "title" },
+                name: { kind: "Name", value: "name" },
                 value: {
                   kind: "Variable",
-                  name: { kind: "Name", value: "title" },
+                  name: { kind: "Name", value: "name" },
                 },
               },
               {
