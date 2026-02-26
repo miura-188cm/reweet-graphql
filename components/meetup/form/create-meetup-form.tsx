@@ -24,21 +24,19 @@ import {
 
 type Props = {
   form: UseFormReturn<MeetupClientSchema>;
-  action: (payload: FormData) => void;
-  buttonLabel: string;
-  isDisabled: boolean;
+  action: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
-export function CreateMeetupForm({
-  form,
-  action,
-  buttonLabel,
-  isDisabled,
-}: Props) {
+export function CreateMeetupForm({ form, action }: Props) {
   const [open, setOpen] = useState(false);
   return (
     <Form {...form}>
-      <form action={action} className="h-full flex flex-col gap-6">
+      <form
+        onSubmit={(e) => {
+          action(e);
+        }}
+        className="h-full flex flex-col gap-6"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -108,11 +106,8 @@ export function CreateMeetupForm({
 
         <Button
           type="submit"
-          disabled={isDisabled}
           className="w-full bg-orange-500 text-white shadow-sm hover:bg-orange-500/90 sm:w-auto"
-        >
-          {buttonLabel}
-        </Button>
+        ></Button>
       </form>
     </Form>
   );
