@@ -1,9 +1,11 @@
 "use client";
+import { useMutation } from "@apollo/client/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import type { MeetupClientSchema } from "@/validations/private/meetupValidation";
-import type { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -21,22 +23,42 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { AddMeetupDocument } from "@/graphql/__generated__/graphql";
+import {
+  meetupClientSchema,
+  type MeetupClientSchema,
+} from "@/validations/private/meetupValidation";
 
-type Props = {
-  form: UseFormReturn<MeetupClientSchema>;
-  action: (e: React.FormEvent<HTMLFormElement>) => void;
-};
-
-export function CreateMeetupForm({ form, action }: Props) {
+export function CreateMeetupForm() {
   const [open, setOpen] = useState(false);
+  const [addMeetup, loading] = useMutation(AddMeetupDocument);
+  const form = useForm<MeetupClientSchema>({
+    resolver: zodResolver(meetupClientSchema),
+    defaultValues: {
+      name: "",
+      scheduledAt: new Date(),
+    },
+  });
+
+  const action = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await addMeetup({
+        variables: {
+          userId: "",
+          name: form.getValues("name"),
+          scheduledAt: form.getValues("scheduledAt").toISOString(),
+        },
+      });
+      console.log("true!");
+      return true;
+    } catch (error) {
+      console.log("addMeetup Error: ", error);
+    }
+  };
   return (
     <Form {...form}>
-      <form
-        onSubmit={(e) => {
-          action(e);
-        }}
-        className="h-full flex flex-col gap-6"
-      >
+      <form onSubmit={action} className="h-full flex flex-col gap-6">
         <FormField
           control={form.control}
           name="name"
@@ -107,7 +129,10 @@ export function CreateMeetupForm({ form, action }: Props) {
         <Button
           type="submit"
           className="w-full bg-orange-500 text-white shadow-sm hover:bg-orange-500/90 sm:w-auto"
-        ></Button>
+        >
+          {loading.loading ? "追加中" : "追加"}
+          {loading.loading ? "TRUE" : "FALSE"}
+        </Button>
       </form>
     </Form>
   );
